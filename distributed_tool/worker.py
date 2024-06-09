@@ -29,7 +29,12 @@ def process_single_task(in_queue: Queue, out_queue: Queue) -> None:
 def process_tasks(in_queue: Queue, out_queue: Queue, number_of_tasks: int) -> None:
     task_count = 0
     while number_of_tasks == -1 or task_count < number_of_tasks:
-        process_single_task(in_queue, out_queue)
+        try:
+            process_single_task(in_queue, out_queue)
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            continue
+
         task_count += 1
         print(f"Result sent to server ({task_count}/{number_of_tasks if number_of_tasks != -1 else '∞'})")
         print("-" * 50)

@@ -15,8 +15,7 @@ def simulate_load_get(lower_b, upper_b, n_threads, api_url):
 
         for future in concurrent.futures.as_completed(get_tasks):
             status_code, response_json, request_time = future.result()
-            print(
-                f"GET request returned status code {status_code} with response: {response_json} in time {request_time:.2f}")
+            print(f"GET request returned status code {status_code} with response: {response_json} in time {request_time:.2f}")
             results.append([status_code, response_json])
 
     return results
@@ -28,13 +27,13 @@ def simulate_load_example(n_requests, n_threads, api_url):
 
         for future in concurrent.futures.as_completed(post_tasks):
             status_code, result = future.result()
-            print(f"POST request returned status code {status_code} with response: {result}")
+            # print(f"POST request returned status code {status_code} with response: {result}")
 
         get_tasks = [executor.submit(send_get_request, api_url, None, None) for i in range(1, n_requests + 1)]
 
         for future in concurrent.futures.as_completed(get_tasks):
             status_code, result = future.result()
-            print(f"GET request returned status code {status_code} with response: {result}")
+            # print(f"GET request returned status code {status_code} with response: {result}")
 
 
 def simulate_load_post(n_requests, n_threads, api_url):

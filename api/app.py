@@ -9,8 +9,7 @@ REQUEST_COUNT = Counter('request_count', 'Total number of requests', ['method', 
 REQUEST_DURATION = Histogram('request_duration_seconds', 'Request duration in seconds', ['method', 'endpoint'])
 
 initial_tasks_count = 10000
-
-tasks = [{'id': i, 'title': f'TODO {i}', 'description': f'Moje {i}-te todo!', 'done': False} for i in range(initial_tasks_count)]
+tasks = [{'id': i, 'title': f'TODO {i}', 'description': f'My {i}-th todo!', 'done': False} for i in range(initial_tasks_count)]
 
 @app.before_request
 def before_request():
