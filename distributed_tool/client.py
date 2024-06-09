@@ -106,5 +106,7 @@ if __name__ == "__main__":
         print("AUTHKEY must be provided in environment variables")
         sys.exit(1)
 
-    request_data = [["GET", api_url] for _ in range(int(number_of_requests))]  # Example request data, adjust as necessary
+    payload = {"key": "value"}  # Example payload
+    headers = {"Authorization": "Bearer token"}  # Example headers
+    request_data = [["GET", api_url, headers, payload] for _ in range(int(number_of_requests))]  # Example request data, adjust as necessary
     main(ip_address, int(port), bytes(password, 'utf-8'), int(number_of_requests), int(number_of_tasks), request_data)
