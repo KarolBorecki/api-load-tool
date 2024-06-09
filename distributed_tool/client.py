@@ -30,7 +30,7 @@ def sent_data(number_of_requests: int, number_of_tasks: int, request_data: list,
     scopes = create_scopes(number_of_requests, number_of_tasks)
     for scope in scopes:
         data_tuple = (scope, request_data)
-        print("Data sent to worker: ", data_tuple)
+        print(f"Data sent to worker: {scope} with data: {request_data[:3]} ... {request_data[-3:]}")
         in_queue.put(data_tuple)
 
 
@@ -42,7 +42,7 @@ def collect_results(tasks: int, number_of_requests: int, out_queue: Queue) -> li
         received_results += 1
 
         scope, requests_stats = partial_result
-        print(f"Got partial result for scope: {scope} from worker with result: {requests_stats}")
+        print(f"Got partial result for scope: {scope} from worker with result: {requests_stats[1:]} ... {requests_stats[-1:]}")
 
         start, stop = scope
         whole_result[start:stop] = requests_stats
@@ -64,7 +64,7 @@ def main(ip_address: str, port: int, password: bytes, number_of_requests: int, n
     start_time = time.time()
     result = collect_results(number_of_tasks, number_of_requests, out_queue=manager.out_queue())
     end_time = time.time()
-    print("Got all results from workers: ", result)
+    print(f"Got all results from workers: {result[:3]} ... {result[-3:]}")
 
     elapsed_time = end_time - start_time
     print(f"It took: {elapsed_time:.2f}s")

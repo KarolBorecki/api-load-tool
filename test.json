@@ -1,6 +1,6 @@
 [
     {
-        "number_of_requests": 30,
+        "number_of_requests": 5,
         "method": "GET",
         "url": "http://localhost:2234/tasks",
         "headers": {
@@ -9,7 +9,7 @@
         "payload": {}
     },
     {
-        "number_of_requests": 30,
+        "number_of_requests": 5,
         "method": "GET",
         "url": "http://localhost:2234/tasks",
         "headers": {

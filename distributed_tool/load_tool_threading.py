@@ -15,7 +15,7 @@ def simulate_load_get(lower_b, upper_b, n_threads, api_url):
 
         for future in concurrent.futures.as_completed(get_tasks):
             status_code, response_json, request_time = future.result()
-            print(f"GET request returned status code {status_code} with response: {response_json} in time {request_time:.2f}")
+            # print(f"GET request returned status code {status_code} with response: {response_json} in time {request_time:.2f}")
             results.append([status_code, response_json])
 
     return results
@@ -42,7 +42,7 @@ def simulate_load_post(n_requests, n_threads, api_url):
 
         for future in concurrent.futures.as_completed(post_tasks):
             status_code, result = future.result()
-            print(f"POST request returned status code {status_code} with response: {result}")
+            # print(f"POST request returned status code {status_code} with response: {result}")
 
 
 def send_post_request(api_url, payload=None, headers=None):
@@ -81,8 +81,7 @@ def simulate_load(lower_b, upper_b, n_threads, requests_data):
         for future in concurrent.futures.as_completed(tasks):
             try:
                 status_code, response_json, request_time = future.result()
-                print(
-                    f"Request returned status code {status_code} with response: {response_json} in time {request_time:.2f}")
+                #print(f"Request returned status code {status_code} with response: {response_json} in time {request_time:.2f}")
                 results.append([status_code, response_json, request_time])
             except Exception as e:
                 print(f"An error occurred: {e}")
