@@ -1,0 +1,20 @@
+[
+    {
+        "number_of_requests": 30,
+        "method": "GET",
+        "url": "http://localhost:2234/tasks",
+        "headers": {
+            "Authorization": "Bearer token"
+        },
+        "payload": {}
+    },
+    {
+        "number_of_requests": 30,
+        "method": "GET",
+        "url": "http://localhost:2234/tasks",
+        "headers": {
+            "Authorization": "Bearer token"
+        },
+        "payload": {}
+    }
+]

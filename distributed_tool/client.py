@@ -1,6 +1,9 @@
+import json
+import sys
+import os
+import time
 from multiprocessing.managers import BaseManager
 from queue import Queue
-import random, sys, os, time
 
 
 class QueueManager(BaseManager):
@@ -67,7 +70,17 @@ def main(ip_address: str, port: int, password: bytes, number_of_requests: int, n
     print(f"It took: {elapsed_time:.2f}s")
 
 
-def validate_input(ip_address: str, port: int, number_of_requests: int, number_of_tasks: int, api_url: str) -> None:
+def load_requests_from_file(file_path: str) -> list:
+    try:
+        with open(file_path, 'r') as file:
+            request_data = json.load(file)
+        return request_data
+    except Exception as e:
+        print(f"Failed to read requests from file: {e}")
+        sys.exit(1)
+
+
+def validate_input(ip_address: str, port: int, number_of_requests: int, number_of_tasks: int) -> None:
     if port <= 0:
         print("Port must be greater than 0")
         sys.exit(1)
@@ -88,25 +101,45 @@ def validate_input(ip_address: str, port: int, number_of_requests: int, number_o
         print("Number of requests should be greater than number of tasks")
         sys.exit(1)
 
-    if not api_url:
-        print("Api url must be specified")
-        sys.exit(1)
-
 
 if __name__ == "__main__":
     if len(sys.argv) != 6:
-        print("Usage: python client.py [server ip] [server port] [number of requests] [number of tasks] [api url]")
+        print(
+            f"Expected 5 args, got {len(sys.argv)}.\n"
+            f"Usage: python client.py [server ip] [server port] [number of tasks] [--f file_path]")
         sys.exit(1)
 
-    ip_address, port, number_of_requests, number_of_tasks, api_url = sys.argv[1:6]
-    validate_input(ip_address, int(port), int(number_of_requests), int(number_of_tasks), api_url)
+    ip_address = sys.argv[1]
+    port = int(sys.argv[2])
+    number_of_tasks = int(sys.argv[3])
+    file_path = sys.argv[5]
 
-    password = os.environ.get('AUTHKEY', "test")
-    if not password:
-        print("AUTHKEY must be provided in environment variables")
+    if sys.argv[4] != '--f':
+        print("The fourth argument must be --f followed by the file path")
         sys.exit(1)
 
-    payload = {"key": "value"}  # Example payload
-    headers = {"Authorization": "Bearer token"}  # Example headers
-    request_data = [["GET", api_url, headers, payload] for _ in range(int(number_of_requests))]  # Example request data, adjust as necessary
-    main(ip_address, int(port), bytes(password, 'utf-8'), int(number_of_requests), int(number_of_tasks), request_data)
+    tests_data = load_requests_from_file(file_path)
+
+    for test_num, test_data in enumerate(tests_data):
+        print(f"Starting test number {test_num + 1}")
+
+        if not isinstance(test_data, dict) or not all(k in test_data for k in ["number_of_requests", "method", "url", "headers", "payload"]):
+            print("Each request data should be a dictionary with keys: number_of_requests, method, url, headers, payload")
+            sys.exit(1)
+
+        number_of_requests = test_data["number_of_requests"]
+        method = test_data["method"]
+        url = test_data["url"]
+        headers = test_data["headers"]
+        payload = test_data["payload"]
+
+        request_data = [[method, url, headers, payload] for _ in range(number_of_requests)]
+        password = os.environ.get('AUTHKEY', "test")
+        if not password:
+            print("AUTHKEY must be provided in environment variables")
+            sys.exit(1)
+
+        validate_input(ip_address, port, number_of_requests, number_of_tasks)
+        main(ip_address, port, bytes(password, 'utf-8'), number_of_requests, number_of_tasks, request_data)
+
+        print(f"Finished test number {test_num + 1}")
