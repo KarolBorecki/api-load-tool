@@ -46,10 +46,12 @@ def simulate_load_post(n_requests, n_threads, api_url):
 
 
 def send_post_request(api_url, payload=None, headers=None):
+    start_time = time.time()
     response = requests.post(api_url,
                              data=json.dumps(payload) if payload else None,
                              headers=headers if headers else None)
-    return response.status_code, response.json()
+    request_time = time.time() - start_time
+    return response.status_code, response.json(), request_time
 
 
 def send_get_request(api_url, payload=None, headers=None):
@@ -76,7 +78,7 @@ def simulate_load(lower_b, upper_b, n_threads, requests_data):
                 break
 
             send_request = send_get_request if http_method.upper() == "GET" else send_post_request
-            tasks.append(executor.submit(send_request, api_url, headers, payload))
+            tasks.append(executor.submit(send_request, api_url, payload, headers))
 
         for future in concurrent.futures.as_completed(tasks):
             try:

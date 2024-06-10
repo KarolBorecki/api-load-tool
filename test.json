@@ -1,20 +1,22 @@
 [
-    {
-        "number_of_requests": 5,
-        "method": "GET",
-        "url": "http://localhost:2234/tasks",
-        "headers": {
-            "Authorization": "Bearer token"
-        },
-        "payload": {}
+  {
+    "number_of_requests": 5,
+    "method": "GET",
+    "url": "http://localhost:2234/tasks/1",
+    "headers": {
+      "Authorization": "Bearer token"
     },
-    {
-        "number_of_requests": 5,
-        "method": "GET",
-        "url": "http://localhost:2234/tasks",
-        "headers": {
-            "Authorization": "Bearer token"
-        },
-        "payload": {}
+    "payload": {}
+  },
+  {
+    "number_of_requests": 10,
+    "method": "POST",
+    "url": "http://localhost:2234/tasks",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "payload": {
+      "title": "task title",
+      "description": "task description"
     }
-]
+    ]
